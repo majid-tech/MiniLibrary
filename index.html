@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mini Library</title>
+</head>
+<body>
+    <h1>Mini Library</h1>
+    <form id="bookForm">
+        <label for="title">Title:</label><br>
+        <input type="text" id="title" placeholder="Book Title"><br><br>
+
+        <label for="author">Author:</label><br>
+        <input type="text" id="author" placeholder="Author Name"><br><br>
+
+        <label for="pages">Pages:</label><br>
+        <input type="number" id="pages" placeholder="Number of Pages"><br><br>
+
+        <label for="read">
+            <input type="checkbox" id="read">
+            Have you read this book?
+        </label><br><br>
+
+        <button type="button" id="newBook">Add Book</button>
+    </form>
+
+    <h2>Your Library:</h2>
+    <div id="container"></div>
+
+    <script src="interactivity.js"></script>
+</body>
+</html>
