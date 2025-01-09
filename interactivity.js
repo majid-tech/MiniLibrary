@@ -21,7 +21,14 @@ function addBookToLibrary() {
     let newBook = new Book(title, author, pages, read);
     myLibrary.push(newBook);
     render();
+
+    // Clear form fields
+    document.getElementById('title').value = '';
+    document.getElementById('author').value = '';
+    document.getElementById('pages').value = '';
+    document.getElementById('read').checked = false;
 }
+
 
 function render() {
     let container = document.getElementById('container');
