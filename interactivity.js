@@ -1,26 +1,85 @@
-const myLibrary = [];
-
-function Book(title, author, pages, read) {
-    this.title = title;
-    this.author = author;
-    this.pages = pages;
-    this.read = read;
-}
-
-function addBookToLibrary() {
-    let title = document.getElementById('title').value.trim();
-    let author = document.getElementById('author').value.trim();
-    let pages = parseInt(document.getElementById('pages').value.trim());
-    let read = document.getElementById('read').checked;
-
-    if (!title || !author || isNaN(pages)) {
-        alert('Please provide valid inputs!');
-        return;
+class Book {
+    constructor(title, author, pages, read) {
+        this.title = title;
+        this.author = author;
+        this.pages = pages;
+        this.read = read;
     }
 
-    let newBook = new Book(title, author, pages, read);
-    myLibrary.push(newBook);
-    render();
+    toggleReadStatus() {
+        this.read = !this.read;
+    }
+}
+
+class Library {
+    constructor() {
+        this.books = [];
+    }
+
+    addBook(title, author, pages, read) {
+        if (!title || !author || isNaN(pages)) {
+            alert('Please provide valid inputs!');
+            return;
+        }
+        const newBook = new Book(title, author, pages, read);
+        this.books.push(newBook);
+        this.render();
+    }
+
+    removeBook(index) {
+        if (index >= 0 && index < this.books.length) {
+            this.books.splice(index, 1);
+            this.render();
+        }
+    }
+
+    toggleRead(index) {
+        if (index >= 0 && index < this.books.length) {
+            this.books[index].toggleReadStatus();
+            this.render();
+        }
+    }
+
+    render() {
+        const container = document.getElementById('container');
+        container.innerHTML = ''; // Clear the container before rendering
+
+        this.books.forEach((book, index) => {
+            const card = document.createElement('div');
+            card.classList.add('card');
+            card.innerHTML = `
+                <h2>${book.title}</h2>
+                <p>by ${book.author}</p>
+                <p>${book.pages} pages</p>
+                <p>${book.read ? 'Read' : 'Not Read'}</p>
+            `;
+
+            const removeBtn = document.createElement('button');
+            removeBtn.textContent = 'Remove';
+            removeBtn.addEventListener('click', () => this.removeBook(index));
+            card.appendChild(removeBtn);
+
+            const toggleBtn = document.createElement('button');
+            toggleBtn.textContent = book.read ? 'Mark as Unread' : 'Mark as Read';
+            toggleBtn.addEventListener('click', () => this.toggleRead(index));
+            card.appendChild(toggleBtn);
+
+            container.appendChild(card);
+        });
+    }
+}
+
+// Create a library instance
+const myLibrary = new Library();
+
+// Function to handle adding a new book
+function addBookToLibrary() {
+    const title = document.getElementById('title').value.trim();
+    const author = document.getElementById('author').value.trim();
+    const pages = parseInt(document.getElementById('pages').value.trim());
+    const read = document.getElementById('read').checked;
+
+    myLibrary.addBook(title, author, pages, read);
 
     // Clear form fields
     document.getElementById('title').value = '';
@@ -29,48 +88,8 @@ function addBookToLibrary() {
     document.getElementById('read').checked = false;
 }
 
-
-function render() {
-    let container = document.getElementById('container');
-    container.innerHTML = ''; // Clear the container before rendering
-
-    myLibrary.forEach((book, index) => {
-        let card = document.createElement('div');
-        card.classList.add('card');
-        card.innerHTML = `
-            <h2>${book.title}</h2>
-            <p>by ${book.author}</p>
-            <p>${book.pages} pages</p>
-            <p>${book.read ? 'Read' : 'Not Read'}</p>
-        `;
-
-        let removeBtn = document.createElement('button');
-        removeBtn.textContent = 'Remove';
-        removeBtn.addEventListener('click', () => removeBook(index));
-        card.appendChild(removeBtn);
-
-        let toggleBtn = document.createElement('button');
-        toggleBtn.textContent = book.read ? 'Mark as Unread' : 'Mark as Read';
-        toggleBtn.addEventListener('click', () => toggleRead(index));
-        card.appendChild(toggleBtn);
-
-        container.appendChild(card);
-    });
-}
-
-function removeBook(index) {
-    if (index >= 0 && index < myLibrary.length) {
-        myLibrary.splice(index, 1);
-        render();
-    }
-}
-
-function toggleRead(index) {
-    if (index >= 0 && index < myLibrary.length) {
-        myLibrary[index].read = !myLibrary[index].read;
-        render();
-    }
-}
-
+// Event listener for the "Add Book" button
 document.getElementById('newBook').addEventListener('click', addBookToLibrary);
-render();
+
+// Initial render
+myLibrary.render();
